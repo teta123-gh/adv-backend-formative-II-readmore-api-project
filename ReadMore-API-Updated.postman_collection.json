@@ -1,0 +1,389 @@
+{
+  "info": {
+    "_postman_id": "9e67cb8e-8263-4a70-a9f1-1ac11355c847",
+    "name": "ReadMore API — Updated Assignment Walkthrough",
+    "description": "Requests ordered for the ReadMore API assignment video. Start the API first. Create author and book requests save IDs automatically. Keep the .env file private; no credentials are stored in this collection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Start and Authors",
+      "item": [
+        {
+          "name": "Health check — GET /",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/"
+            }
+          }
+        },
+        {
+          "name": "Create author — POST /authors",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/authors"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Chinua Achebe\",\n  \"country\": \"Nigeria\",\n  \"bio\": \"Nigerian novelist and poet.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('authorId', data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List authors — GET /authors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors"
+            }
+          }
+        },
+        {
+          "name": "Get author — GET /authors/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/{{authorId}}"
+            }
+          }
+        },
+        {
+          "name": "Update author — PUT /authors/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/authors/{{authorId}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Chinua Achebe\",\n  \"country\": \"Nigeria\",\n  \"bio\": \"Nigerian novelist, poet, and author.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Books, relationship, filters, statistics",
+      "item": [
+        {
+          "name": "Create book — POST /books",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"{{demoTitle}}\",\n  \"genre\": \"Historical Fiction\",\n  \"price\": 24.99,\n  \"publishedYear\": 1958,\n  \"author\": \"{{authorId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const title = `Postman Demo ${Date.now()}`;",
+                  "pm.collectionVariables.set('demoTitle', title);",
+                  "pm.collectionVariables.set('duplicateTitle', title.toLowerCase());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('bookId', data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List books — GET /books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books"
+            }
+          }
+        },
+        {
+          "name": "Get book — GET /books/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/{{bookId}}"
+            }
+          }
+        },
+        {
+          "name": "Update book — PUT /books/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/books/{{bookId}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"{{demoTitle}}\",\n  \"genre\": \"Historical Fiction\",\n  \"price\": 25.99,\n  \"publishedYear\": 1958,\n  \"author\": \"{{authorId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get author's books — GET /authors/:id/books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/{{authorId}}/books"
+            }
+          }
+        },
+        {
+          "name": "Author statistics — GET /authors/:id/stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/{{authorId}}/stats"
+            }
+          }
+        },
+        {
+          "name": "Combined filters and sort — GET /books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books?genre=Historical%20Fiction&minPrice=10&maxPrice=30&author={{authorId}}&search=postman&sort=price&order=asc"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Required business-rule demonstrations",
+      "item": [
+        {
+          "name": "Reject duplicate title (expect 409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"{{duplicateTitle}}\",\n  \"genre\": \"Fiction\",\n  \"price\": 19.99,\n  \"publishedYear\": 1960,\n  \"author\": \"{{authorId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Reject zero price (expect 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Invalid Price Example\",\n  \"genre\": \"Fiction\",\n  \"price\": 0,\n  \"publishedYear\": 2020,\n  \"author\": \"{{authorId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Reject future year (expect 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Future Year Example\",\n  \"genre\": \"Fiction\",\n  \"price\": 20,\n  \"publishedYear\": 2099,\n  \"author\": \"{{authorId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Reject nonexistent author (expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Missing Author Example\",\n  \"genre\": \"Fiction\",\n  \"price\": 14.99,\n  \"publishedYear\": 2020,\n  \"author\": \"000000000000000000000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Block author deletion while books exist (expect 409)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/{{authorId}}"
+            }
+          }
+        },
+        {
+          "name": "Delete demo book — DELETE /books/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/books/{{bookId}}"
+            }
+          }
+        },
+        {
+          "name": "Delete now-bookless author — DELETE /authors/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/authors/{{authorId}}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authorId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bookId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "demoTitle",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "duplicateTitle",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
